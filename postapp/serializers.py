@@ -45,3 +45,10 @@ class QuestionDetailSerializer(ModelSerializer):
     class Meta:
         model = Question
         fields = ['id', 'question', 'writer', 'comments', 'created_at']
+
+class QuestionDetailSerializer(ModelSerializer):
+    comments = CommentSerializer(many=True, read_only=True)
+    writer = serializers.ReadOnlyField(source = 'writer.name')
+    class Meta:
+        model = Question
+        fields = ['id', 'question', 'writer', 'comments', 'created_at']
