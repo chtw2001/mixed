@@ -33,15 +33,18 @@ INSTALLED_APPS = [
     
     'rest_framework',
     'rest_framework.authtoken',
+    'rest_framework_simplejwt.token_blacklist', # for Refreshed Tokens
     'corsheaders',
     'rest_auth',
+    'allauth',
 
 ]
 
 REST_FRAMEWORK = {
 	'DEFAULT_AUTHENTICATION_CLASSES': [
     # 'rest_framework.authentication.SessionAuthentication',
-    'rest_framework.authentication.TokenAuthentication', 
+    # 'rest_framework.authentication.TokenAuthentication', 
+    'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
     'DEFAULT_PERMISSION_CLASSES': [
    'rest_framework.permissions.AllowAny',],
@@ -173,3 +176,12 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'login.User'
+
+SIMPLE_JWT={
+    'ACCESS_TOKEN_LIFETIME':datetime.timedelta(minutes=10),
+    'REFRESH_TOKEN_LIFETIME': datetime.timedelta(days=7),
+    'ROTATE_REFRESH_TOKEN': True,
+    'BLACKLIST_AFTER_ROTATION': True,
+    "UPDATE_LAST_LOGIN": True,
+    "AUTH_HEADER_TYPES": ("Bearer",),
+}

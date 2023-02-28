@@ -7,6 +7,21 @@ from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnl
                                # all methods need Authenticate  # => GET method 허용시 사용
 from rest_framework.authentication import TokenAuthentication
 from django.contrib.auth import login, logout
+from rest_framework.views import APIView
+from rest_framework_simplejwt.tokens import RefreshToken
+
+class BlacklistRefreshView(APIView):   # 로그아웃시 리프레시 토큰 blacklist
+    def post(self, request):
+        token = RefreshToken(request.data.get('refresh'))
+        token.blacklist()
+        return Response("Success")
+    
+class HelloView(APIView):       # just for test
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request):
+        content = {'message': 'Hello, World!'}
+        return Response(content)
 
 # 회원가입
 class UserCreate(generics.CreateAPIView):
