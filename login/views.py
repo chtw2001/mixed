@@ -1,27 +1,13 @@
 from django.shortcuts import render
-from .serializers import UserSerializer, ProfileSerializer, LoginSerializer
+from .serializers import UserSerializer, ProfileSerializer, LoginSerializer #, MyTokenObtainPairSerializer
 from .models import User
 from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly 
                                # all methods need Authenticate  # => GET method 허용시 사용
-from rest_framework.authentication import TokenAuthentication
+from rest_framework.authentication import SessionAuthentication
 from django.contrib.auth import login, logout
 from rest_framework.views import APIView
-from rest_framework_simplejwt.tokens import RefreshToken
-
-class BlacklistRefreshView(APIView):   # 로그아웃시 리프레시 토큰 blacklist
-    def post(self, request):
-        token = RefreshToken(request.data.get('refresh'))
-        token.blacklist()
-        return Response("Success")
-    
-class HelloView(APIView):       # just for test
-    permission_classes = (IsAuthenticated,)
-
-    def get(self, request):
-        content = {'message': 'Hello, World!'}
-        return Response(content)
 
 # 회원가입
 class UserCreate(generics.CreateAPIView):
@@ -29,7 +15,7 @@ class UserCreate(generics.CreateAPIView):
     serializer_class = UserSerializer
 
 class ProfileList(generics.RetrieveUpdateAPIView):
-    authentication_classes = [TokenAuthentication]
+    authentication_classes = [SessionAuthentication]
     permission_classes = [IsAuthenticated]
 
     queryset = User.objects.all()
@@ -51,3 +37,8 @@ class LoginView(generics.GenericAPIView):
             'token': token.key,},
             status=status.HTTP_200_OK)
     
+class LogoutView(APIView):
+    def get(self, request, format=None):
+        # using Django logout
+        logout(request)
+        return Response(status=status.HTTP_200_OK)

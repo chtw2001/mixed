@@ -43,24 +43,19 @@ INSTALLED_APPS = [
 
 REST_FRAMEWORK = {
 	'DEFAULT_AUTHENTICATION_CLASSES': [
-    # 'rest_framework.authentication.SessionAuthentication',
-    # 'rest_framework.authentication.TokenAuthentication', 
-    'rest_framework_simplejwt.authentication.JWTAuthentication',
+    'rest_framework.authentication.SessionAuthentication',
+    'rest_framework.authentication.TokenAuthentication', 
+    # 'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
     'DEFAULT_PERMISSION_CLASSES': [
-   'rest_framework.permissions.AllowAny',],
-
-    # 'DEFAULT_RENDERER_CLASSES': [
-    # 'djangorestframework_camel_case.render.CamelCaseJSONRenderer', 
-    # 'djangorestframework_camel_case.render.CamelCaseBrowsableAPIRenderer',
-    # ],
-
-    # 'DEFAULT_PARSER_CLASSES': [
-    # 'djangorestframework_camel_case.parser.CamelCaseFormParser', 
-    # 'djangorestframework_camel_case.parser.CamelCaseMultiPartParser',
-    # 'djangorestframework_camel_case.parser.CamelCaseJSONParser',
-    # ],
+    'rest_framework.permissions.AllowAny',
+    # 'rest_framework.authentication.SessionAuthentication',
+   ],
 }
+
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+SESSION_COOKIE_AGE = 1800 # set just 30 minutes
+SESSION_SAVE_EVERY_REQUEST = True
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware', 
@@ -179,6 +174,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'login.User'
 
 SIMPLE_JWT={
+    # "TOKEN_OBTAIN_SERIALIZER": "rest_framework_simplejwt.serializers.MyTokenObtainPairSerializer",
     'ACCESS_TOKEN_LIFETIME':datetime.timedelta(minutes=10),
     'REFRESH_TOKEN_LIFETIME': datetime.timedelta(days=7),
     'ROTATE_REFRESH_TOKEN': True,
